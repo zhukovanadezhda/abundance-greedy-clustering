@@ -1,4 +1,4 @@
-# OTU Calculation
+# OTU Calculation with Abundance Greedy Clustering
 
 This repository contains a Python program designed to calculate OTUs (Operational Taxonomic Units) from a "mock" sequencing dataset, focusing on bacterial sequences. Eight species are expected in the analysis.
 
@@ -27,7 +27,7 @@ The program processes sequences in FASTA format and performs dereplication, chim
 
 To run tests, use the command:
 ```
-pytest --cov=agc
+pytest --cov=agc -v -s --ignore=tests/test_chimera_removal.py 
 ```
 
 ## Contact
