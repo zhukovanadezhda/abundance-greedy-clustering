@@ -175,8 +175,9 @@ def abundance_greedy_clustering(amplicon_file: Path,
 
         # Compare with existing OTUs
         for otu, _ in otu_list:
-            # Align the sequence with the OTU
-            alignment = [sequence, otu]
+            
+            # Perform global alignment between the current sequence and each OTU
+            alignment = nw.global_align(sequence, otu, gap_open=-1, gap_extend=-1, matrix=str(Path(__file__).parent / "MATCH"))
 
             # Calculate identity
             identity = get_identity(alignment)
@@ -217,12 +218,18 @@ def main(): # pragma: no cover
     """
     # Get arguments
     args = get_arguments()
+    
+    # Perform OTU clustering
     otu_list = abundance_greedy_clustering(args.amplicon_file,
                                            args.minseqlen,
                                            args.mincount,
-                                           100,
-                                           8)
+                                           chunk_size=100, 
+                                           kmer_size=8)
+    
+    # Write OTU sequences to the output file
     write_OTU(otu_list, args.output_file)
+    print("OTU clustering finished.")
+    print(f"OTU sequences written to {args.output_file}")
 
 
 if __name__ == '__main__':
