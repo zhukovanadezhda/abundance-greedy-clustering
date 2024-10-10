@@ -1,4 +1,4 @@
-# OTU Calculation
+# OTU Calculation with Abundance Greedy Clustering
 
 This repository contains a Python program designed to calculate OTUs (Operational Taxonomic Units) from a "mock" sequencing dataset, focusing on bacterial sequences. Eight species are expected in the analysis.
 
