@@ -39,6 +39,14 @@ To run the program, execute the following command:
 python3 agc/agc.py -i data/amplicon.fasta.gz -o output/OTU.fasta
 ```
 
+## ⚙️Testing
+
+To run unit tests and measure code coverage, use:
+
+```bash
+pytest --cov=agc -v -s --ignore=tests/test_chimera_removal.py 
+```
+
 ## 🎁Example Usage
 
 To run the program and calculate OTUs, execute the following command:
@@ -48,14 +56,6 @@ python3 agc/agc.py -i data/amplicon.fasta.gz
 ```
 
 This will output the OTU sequences in a file named `OTU.fasta`.
-
-## ⚙️Testing
-
-To run unit tests and measure code coverage, use:
-
-```bash
-pytest --cov=agc -v -s --ignore=tests/test_chimera_removal.py 
-```
 
 ## Verifying Results with `vsearch`
 
