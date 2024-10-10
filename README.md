@@ -57,16 +57,17 @@ python3 agc/agc.py -i data/amplicon.fasta.gz
 
 This will output the OTU sequences in a file named `OTU.fasta`.
 
-## Verifying Results with `vsearch`
+### Verifying Results with `vsearch`
 
 To assess the quality of the OTUs generated, you can use `vsearch` to compare them against a reference 16S rRNA database (e.g., `mock_16S.fasta`).
-### Align OTUs against the reference database using the `usearch_global` function in `vsearch`:
+
+Align OTUs against the reference database using the `usearch_global` function in `vsearch`:
 
    ```bash
    vsearch --usearch_global OTU.fasta --db data/mock_16S.fasta --id 0.8 --blast6out results.tsv
    ```
 
-### Example `vsearch` Output:
+### Example `vsearch` output:
 
 ```bash
 vsearch v2.29.0_linux_x86_64, 7.6GB RAM, 12 cores
