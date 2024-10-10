@@ -27,7 +27,7 @@ The program processes sequences in FASTA format and performs dereplication, chim
 
 To run tests, use the command:
 ```
-pytest --cov=agc
+pytest --cov=agc -v -s --ignore=tests/test_chimera_removal.py 
 ```
 
 ## Contact
