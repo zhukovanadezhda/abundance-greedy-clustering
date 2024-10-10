@@ -14,27 +14,25 @@
 """OTU clustering"""
 
 import argparse
-import sys
-import os
-import gzip
-import statistics
-import textwrap
-from pathlib import Path
 from collections import Counter
+import gzip
+import os
+from pathlib import Path
+import statistics
+import sys
+import textwrap
 from typing import Iterator, Dict, List
-# https://github.com/briney/nwalign3
-# ftp://ftp.ncbi.nih.gov/blast/matrices/
 import nwalign3 as nw
 
-__author__ = "Your Name"
-__copyright__ = "Universite Paris Diderot"
-__credits__ = ["Your Name"]
+
+__author__ = "Nadezhda Zhukova"
+__copyright__ = "Université Paris Cité"
+__credits__ = ["Nadezhda Zhukova"]
 __license__ = "GPL"
 __version__ = "1.0.0"
-__maintainer__ = "Your Name"
-__email__ = "your@email.fr"
+__maintainer__ = "Nadezhda Zhukova"
+__email__ = "nadiajuckova@gmail.com"
 __status__ = "Developpement"
-
 
 
 def isfile(path: str) -> Path:  # pragma: no cover
@@ -65,14 +63,30 @@ def get_arguments(): # pragma: no cover
     parser = argparse.ArgumentParser(description=__doc__, usage=
                                      "{0} -h"
                                      .format(sys.argv[0]))
-    parser.add_argument('-i', '-amplicon_file', dest='amplicon_file', type=isfile, required=True, 
+    parser.add_argument('-i', 
+                        '-amplicon_file', 
+                        dest='amplicon_file', 
+                        type=isfile, required=True, 
                         help="Amplicon is a compressed fasta file (.fasta.gz)")
-    parser.add_argument('-s', '-minseqlen', dest='minseqlen', type=int, default = 400,
-                        help="Minimum sequence length for dereplication (default 400)")
-    parser.add_argument('-m', '-mincount', dest='mincount', type=int, default = 10,
-                        help="Minimum count for dereplication  (default 10)")
-    parser.add_argument('-o', '-output_file', dest='output_file', type=Path,
-                        default=Path("OTU.fasta"), help="Output file")
+    parser.add_argument('-s', 
+                        '-minseqlen', 
+                        dest='minseqlen', 
+                        type=int, 
+                        default = 400,
+                        help=("Minimum sequence length for dereplication "
+                              "(default 400)"))
+    parser.add_argument('-m', 
+                        '-mincount', 
+                        dest='mincount', 
+                        type=int, 
+                        default = 10,
+                        help="Minimum count for dereplication (default 10)")
+    parser.add_argument('-o', 
+                        '-output_file',
+                        dest='output_file', 
+                        type=Path,
+                        default=Path("OTU.fasta"), 
+                        help="Output file")
     return parser.parse_args()
 
 
@@ -83,18 +97,45 @@ def read_fasta(amplicon_file: Path, minseqlen: int) -> Iterator[str]:
     :param minseqlen: (int) Minimum amplicon sequence length
     :return: A generator object that provides the Fasta sequences (str).
     """
-    pass
+    with gzip.open(amplicon_file, 'rt') as fasta_file:
+        sequence = []
+        for line in fasta_file:
+            line = line.strip()
+            if line.startswith(">"):
+                # If there is a sequence ready and its length is valid, yield
+                if sequence and len("".join(sequence)) >= minseqlen:
+                    yield "".join(sequence)
+                # Reset sequence buffer for the next entry
+                sequence = []
+            else:
+                # Continue collecting the sequence
+                sequence.append(line)
+        
+        # Yield the last sequence if it meets the length requirement
+        if sequence and len("".join(sequence)) >= minseqlen:
+            yield "".join(sequence)
 
 
-def dereplication_fulllength(amplicon_file: Path, minseqlen: int, mincount: int) -> Iterator[List]:
+def dereplication_fulllength(amplicon_file: Path, 
+                             minseqlen: int, 
+                             mincount: int) -> Iterator[List]:
     """Dereplicate the set of sequence
 
     :param amplicon_file: (Path) Path to the amplicon file in FASTA.gz format.
     :param minseqlen: (int) Minimum amplicon sequence length
     :param mincount: (int) Minimum amplicon count
-    :return: A generator object that provides a (list)[sequences, count] of sequence with a count >= mincount and a length >= minseqlen.
+    :return: A generator object that provides a (list)[sequences, count] of 
+             sequence with a count >= mincount and a length >= minseqlen.
     """
-    pass
+    # Get all sequences that satisfy the length requirement 
+    sequence_counter = Counter(read_fasta(amplicon_file, minseqlen))
+    
+    # Filter out sequences that do not meet the mincount requirement
+    # Sort by occurrence (most common first)
+    for sequence, count in sequence_counter.most_common(): 
+        if count >= mincount:
+            yield [sequence, count]
+
 
 def get_identity(alignment_list: List[str]) -> float:
     """Compute the identity rate between two sequences
@@ -102,7 +143,16 @@ def get_identity(alignment_list: List[str]) -> float:
     :param alignment_list:  (list) A list of aligned sequences in the format ["SE-QUENCE1", "SE-QUENCE2"]
     :return: (float) The rate of identity between the two sequences.
     """
-    pass
+    seq1, seq2 = alignment_list
+    matches = sum(res1 == res2 
+                  for res1, res2 
+                  in zip(seq1, seq2) 
+                  if res1 != '-' and res2 != '-')
+    length = sum(res1 != '-' and res2 != '-' 
+                 for res1, res2 
+                 in zip(seq1, seq2))
+    return (matches / length) * 100 if length > 0 else 0.0
+
 
 def abundance_greedy_clustering(amplicon_file: Path, minseqlen: int, mincount: int, chunk_size: int, kmer_size: int) -> List:
     """Compute an abundance greedy clustering regarding sequence count and identity.
