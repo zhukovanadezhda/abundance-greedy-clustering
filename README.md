@@ -1,4 +1,4 @@
-# OTU Calculation Using Abundance Greedy Clustering
+# 🦠🧬OTU Calculation Using Abundance Greedy Clustering
 
 This repository contains a Python program to calculate OTUs (Operational Taxonomic Units) from a bacterial sequencing dataset. The focus is on processing "mock" sequencing data, with eight bacterial species expected in the analysis.
 
@@ -6,7 +6,7 @@ The program performs the following:
 - Full-length sequence dereplication
 - Clustering using the **Abundance Greedy Clustering** algorithm
 
-## Installation
+## 🔄Installation
 
 To set up the environment and install the required dependencies, use the following commands:
 
@@ -15,7 +15,7 @@ conda env create -f environment.yml
 conda activate abundance-greedy-clustering
 ```
 
-## Usage
+## 🧑‍💻️Usage
 
 First, clone the repository and navigate to the project folder:
 
@@ -39,7 +39,7 @@ To run the program, execute the following command:
 python3 agc/agc.py -i data/amplicon.fasta.gz -o output/OTU.fasta
 ```
 
-## Example Usage
+## 🎁Example Usage
 
 To run the program and calculate OTUs, execute the following command:
 
@@ -49,7 +49,7 @@ python3 agc/agc.py -i data/amplicon.fasta.gz
 
 This will output the OTU sequences in a file named `OTU.fasta`.
 
-## Testing
+## ⚙️Testing
 
 To run unit tests and measure code coverage, use:
 
@@ -83,6 +83,6 @@ Matching unique query sequences: 116 of 117 (99.15%)
 
 This output demonstrates that the OTUs generated are well-matched against the reference sequences.
 
-## Contact
+## ✉️Contact
 
 For questions or support, please contact [nadiajuckova@gmail.com](mailto:nadiajuckova@gmail.com).
