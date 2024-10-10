@@ -1,0 +1,15 @@
+name: abundance-greedy-clustering
+channels:
+  - nodefaults
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.9
+  - numpy=1.19.5
+  - matplotlib
+  - pytest 
+  - pylint 
+  - pytest-cov
+  - pip
+  - nwalign3
+
