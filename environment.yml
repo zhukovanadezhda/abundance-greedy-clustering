@@ -11,5 +11,6 @@ dependencies:
   - pylint 
   - pytest-cov
   - pip
+  - vsearch
   - nwalign3
 
