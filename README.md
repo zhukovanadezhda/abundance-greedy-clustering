@@ -20,7 +20,7 @@ conda activate abundance-greedy-clustering
 First, clone the repository and navigate to the project folder:
 
 ```bash
-git clone git@github.com:yourusername/abundance-greedy-clustering.git
+git clone git@github.com:zhukovanadezhda/abundance-greedy-clustering.git
 cd abundance-greedy-clustering
 ```
 
